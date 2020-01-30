@@ -1,4 +1,10 @@
-Delayed::Worker.delay_jobs = false
+if Rails.env.test? || Rails.env.development?
+  Delayed::Worker.delay_jobs = false
+elsif Rails.application.secrets.delay_jobs.nil?
+  Delayed::Worker.delay_jobs = true
+else
+  Delayed::Worker.delay_jobs = Rails.application.secrets.delay_jobs
+end
 
 Delayed::Worker.destroy_failed_jobs = false
 Delayed::Worker.sleep_delay = 2
