@@ -74,10 +74,18 @@ Rails.application.configure do
   config.action_mailer.asset_host = "https://#{Rails.application.secrets.server_name}"
 
   # Configure your SMTP service credentials in secrets.yml
-  if Rails.application.secrets.smtp_settings
-    config.action_mailer.delivery_method = Rails.application.secrets.mailer_delivery_method || :smtp
-    config.action_mailer.smtp_settings = Rails.application.secrets.smtp_settings
-  end
+    config.action_mailer.delivery_method =  :smtp
+    config.action_mailer.perform_deliveries =  true
+    config.action_mailer.smtp_settings = {
+	:address	=> Rails.application.secrets.smtp_settings.address,
+	:port	=> Rails.application.secrets.smtp_settings.port,
+	:authentication	=> Rails.application.secrets.smtp_settings.authentication,
+	:user_name	=> Rails.application.secrets.smtp_settings.user_name,
+	:password	=> Rails.application.secrets.smtp_settings.password,
+	:domain	=> Rails.application.secrets.smtp_settings.domain,
+	:enable_starttls_auto	=> Rails.application.secrets.smtp_settings.enable_starttls_auto,
+	:openssl_verify_mode => 'none'
+}
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
